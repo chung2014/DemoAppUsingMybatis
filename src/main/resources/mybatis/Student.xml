@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MyStudent">
+<!--    <resultMap id="resultMapId" type="StudentPojo">-->
+<!--        <result property="id" column="ID" />-->
+<!--    </resultMap>-->
+
+    <resultMap id="resultMapId" type="StudentPojo">
+
+    </resultMap>
+
+    <insert id="insertAStudent" parameterType="StudentPojo">
+        INSERT INTO STUDENT (NAME, BRANCH, PERCENTAGE, PHONE, EMAIL ) VALUES (#{name}, #{branch}, #{percentage}, #{phone}, #{email});
+
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id() as id
+        </selectKey>
+    </insert>
+
+    <select id="myGetAll" resultMap="resultMapId">
+        SELECT * FROM STUDENT;
+    </select>
+
+    <select id="myGetById" parameterType="int" resultMap="resultMapId" >
+        SELECT * FROM STUDENT WHERE ID = #{theVal};
+    </select>
+
+    <update id="myUpdate" parameterType="StudentPojo">
+        UPDATE STUDENT
+        SET
+            NAME = #{name},
+            PERCENTAGE = #{percentage},
+            PHONE = #{phone},
+            EMAIL = #{email}
+        WHERE ID = #{id};
+    </update>
+
+    <delete id="myDeleteById" parameterType="int">
+        DELETE FROM STUDENT WHERE ID = #{theVal};
+    </delete>
+
+    <delete id="myDeleteALL">
+        DELETE FROM STUDENT;
+    </delete>
+
+    <select id="myCallById9999" resultMap="resultMapId" parameterType="StudentPojo" statementType="CALLABLE">
+        {call my_read_recordById(#{myIdVal, jdbcType = INTEGER, mode = IN})}
+    </select>
+
+    <select id="myCallById_1" resultMap="resultMapId" parameterType="StudentPojo" statementType="CALLABLE">
+        {call my_read_recordById(#{myIdVal})}
+    </select>
+
+    <select id="myGetRecByName" parameterType="String" resultType="StudentPojo">
+        SELECT * FROM STUDENT WHERE name LIKE concat('%', #{nameVal}, '%');
+    </select>
+</mapper>
